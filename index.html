@@ -96,16 +96,29 @@
   .masthead-logos {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.55rem;
     flex-shrink: 0;
-    padding-top: 0.2rem;
+    padding-top: 0.1rem;
   }
 
-  .masthead-logos svg { display: block; height: 26px; width: auto; }
+  .logo-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    padding: 0 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
 
-  @media (max-width: 420px) {
-    .masthead-logos svg { height: 19px; }
-    .masthead-logos { gap: 0.35rem; }
+  .logo-chip svg { display: block; height: 32px; width: auto; }
+
+  @media (max-width: 480px) {
+    .logo-chip { height: 40px; padding: 0 0.55rem; border-radius: 10px; }
+    .logo-chip svg { height: 24px; }
+    .masthead-logos { gap: 0.4rem; }
   }
 
   .eyebrow {
@@ -541,31 +554,38 @@
       <p class="sub">Lance o que sai do caixa. Todo mundo com este link vê e edita os mesmos lançamentos, na hora.</p>
     </div>
     <div class="masthead-logos" aria-hidden="true">
-      <svg viewBox="0 0 100 70" role="img" aria-label="Galacto Doces">
-        <path d="M2 14 L34 24 L34 46 L2 56 C6 46 6 24 2 14 Z" fill="#BC4A9B"/>
-        <path d="M10 22 C16 28 16 42 10 48" fill="none" stroke="#E7A9CF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
-        <path d="M98 14 L66 24 L66 46 L98 56 C94 46 94 24 98 14 Z" fill="#BC4A9B"/>
-        <path d="M90 22 C84 28 84 42 90 48" fill="none" stroke="#E7A9CF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
-        <defs>
-          <clipPath id="pillClip"><rect x="30" y="4" width="40" height="62" rx="20"/></clipPath>
-        </defs>
-        <g clip-path="url(#pillClip)">
-          <rect x="30" y="4" width="40" height="62" fill="#F6C6DC"/>
-          <rect x="24" y="-4" width="16" height="80" fill="#EF5FA1" transform="rotate(18 40 35)"/>
-          <rect x="40" y="-4" width="18" height="80" fill="#FBC24B" transform="rotate(18 49 35)"/>
-          <rect x="58" y="-4" width="14" height="80" fill="#EF5FA1" transform="rotate(18 65 35)"/>
-          <circle cx="43" cy="14" r="2.6" fill="#fff"/>
-          <circle cx="47" cy="24" r="2.6" fill="#fff"/>
-          <circle cx="51" cy="34" r="2.6" fill="#fff"/>
-          <circle cx="55" cy="44" r="2.6" fill="#fff"/>
-          <circle cx="59" cy="54" r="2.6" fill="#fff"/>
-        </g>
-      </svg>
-      <svg viewBox="0 0 100 90" role="img" aria-label="Med Service">
-        <polygon points="26,44 38,52 38,72 26,80 14,72 14,52" fill="#7EC8EA"/>
-        <polygon points="45,20 57,30 57,70 45,80 33,70 33,30" fill="#9B5FC0"/>
-        <polygon points="66,16 78,26 78,70 66,80 54,70 54,26" fill="#1E3AAE"/>
-      </svg>
+      <div class="logo-chip">
+        <svg viewBox="0 0 100 70" role="img" aria-label="Galacto Doces">
+          <path d="M4 10 C13 16 13 24 13 35 C13 46 13 54 4 60 C1 44 1 26 4 10 Z" fill="#B84098"/>
+          <path d="M4 10 C13 16 13 24 13 35 C13 46 13 54 4 60 C10 47 10 23 4 10 Z" fill="#A0328A"/>
+          <path d="M12 21 C17 27 17 43 12 49" fill="none" stroke="#EFB4DC" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/>
+          <path d="M96 10 C87 16 87 24 87 35 C87 46 87 54 96 60 C99 44 99 26 96 10 Z" fill="#B84098"/>
+          <path d="M96 10 C87 16 87 24 87 35 C87 46 87 54 96 60 C90 47 90 23 96 10 Z" fill="#A0328A"/>
+          <path d="M88 21 C83 27 83 43 88 49" fill="none" stroke="#EFB4DC" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/>
+          <defs>
+            <clipPath id="pillClip"><rect x="28" y="2" width="44" height="66" rx="22"/></clipPath>
+          </defs>
+          <g clip-path="url(#pillClip)">
+            <rect x="28" y="2" width="44" height="66" fill="#F8CBE0"/>
+            <rect x="20" y="-6" width="15" height="84" fill="#EE5CA0" transform="rotate(16 40 35)"/>
+            <rect x="37" y="-6" width="19" height="84" fill="#FCC94D" transform="rotate(16 50 35)"/>
+            <rect x="58" y="-6" width="13" height="84" fill="#EE5CA0" transform="rotate(16 66 35)"/>
+            <circle cx="41" cy="11" r="2.8" fill="#fff"/>
+            <circle cx="45" cy="21" r="2.8" fill="#fff"/>
+            <circle cx="49" cy="31" r="2.8" fill="#fff"/>
+            <circle cx="53" cy="41" r="2.8" fill="#fff"/>
+            <circle cx="57" cy="51" r="2.8" fill="#fff"/>
+            <circle cx="61" cy="61" r="2.8" fill="#fff"/>
+          </g>
+        </svg>
+      </div>
+      <div class="logo-chip">
+        <svg viewBox="0 0 100 90" role="img" aria-label="Med Service">
+          <polygon points="26,44 38,52 38,72 26,80 14,72 14,52" fill="#84CCEC"/>
+          <polygon points="45,18 58,29 58,71 45,82 32,71 32,29" fill="#9958C4"/>
+          <polygon points="67,14 80,25 80,71 67,82 54,71 54,25" fill="#1B33AC"/>
+        </svg>
+      </div>
     </div>
   </header>
 
