@@ -173,13 +173,23 @@
   }
 
   .entry-form {
-    display: grid;
-    grid-template-columns: 122px 1fr 128px 152px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .entry-form-row {
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.9rem 1.1rem;
     align-items: end;
   }
 
   .field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+
+  .field-date { flex: 0 0 132px; }
+  .field-amount { flex: 0 0 140px; }
+  .field-who { flex: 1 1 150px; min-width: 130px; }
 
   .field label {
     font-size: 0.72rem;
@@ -431,17 +441,14 @@
   /* ---------- responsive ---------- */
 
   @media (max-width: 640px) {
-    .entry-form { grid-template-columns: 1fr 1fr; }
-    .field-desc { grid-column: 1 / -1; }
-    .btn-add { grid-column: 1 / -1; }
     .entry-desc { max-width: 48%; }
   }
 
   @media (max-width: 420px) {
     .stats { grid-template-columns: 1fr; }
-    .entry-form { grid-template-columns: 1fr; }
-    .field-desc { grid-column: auto; }
-    .btn-add { grid-column: auto; }
+    .entry-form-row { flex-direction: column; align-items: stretch; }
+    .field-date, .field-amount, .field-who { flex: 1 1 auto; }
+    .btn-add { width: 100%; }
   }
 </style>
 </head>
@@ -475,26 +482,28 @@
 
   <section class="entry-form-wrap" aria-label="Novo lançamento">
     <form id="entry-form" class="entry-form" autocomplete="off">
-      <div class="field field-date">
-        <label for="f-date">Data</label>
-        <input type="date" id="f-date" name="date" required>
-      </div>
       <div class="field field-desc">
         <label for="f-desc">O que é</label>
-        <input type="text" id="f-desc" name="description" placeholder="Frete, anúncios, aluguel…" required maxlength="120">
+        <input type="text" id="f-desc" name="description" placeholder="Frete Correios, anúncios do Meta, aluguel do galpão…" required maxlength="120">
       </div>
-      <div class="field field-amount">
-        <label for="f-amount">Valor</label>
-        <div class="amount-input">
-          <span>R$</span>
-          <input type="text" id="f-amount" name="amount" inputmode="decimal" placeholder="0,00" required>
+      <div class="entry-form-row">
+        <div class="field field-date">
+          <label for="f-date">Data</label>
+          <input type="date" id="f-date" name="date" required>
         </div>
+        <div class="field field-amount">
+          <label for="f-amount">Valor</label>
+          <div class="amount-input">
+            <span>R$</span>
+            <input type="text" id="f-amount" name="amount" inputmode="decimal" placeholder="0,00" required>
+          </div>
+        </div>
+        <div class="field field-who">
+          <label for="f-who">Quem <span class="opt">(opcional)</span></label>
+          <input type="text" id="f-who" name="who" maxlength="40" placeholder="Seu nome">
+        </div>
+        <button type="submit" id="f-submit" class="btn-add">Lançar</button>
       </div>
-      <div class="field field-who">
-        <label for="f-who">Quem <span class="opt">(opcional)</span></label>
-        <input type="text" id="f-who" name="who" maxlength="40" placeholder="Seu nome">
-      </div>
-      <button type="submit" id="f-submit" class="btn-add">Lançar</button>
     </form>
     <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
   </section>
