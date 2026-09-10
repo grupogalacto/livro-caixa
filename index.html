@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livro-Caixa</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%BE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #EEF1ED;
+    --surface: #FCFDFB;
+    --surface-2: #F4F6F2;
+    --ink: #16211B;
+    --ink-muted: #5C6B60;
+    --ink-faint: #8C978E;
+    --line: #D8DED6;
+    --accent: #0E6B52;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E4F0EA;
+    --danger: #A6432F;
+    --shadow: 0 1px 2px rgba(22, 33, 27, 0.06), 0 6px 20px rgba(22, 33, 27, 0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1613;
+      --surface: #16211C;
+      --surface-2: #1B2620;
+      --ink: #E7EFE9;
+      --ink-muted: #92A296;
+      --ink-faint: #5E6E64;
+      --line: #2B3830;
+      --accent: #3ED9AC;
+      --accent-ink: #0B1512;
+      --accent-soft: #163229;
+      --danger: #E38068;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0F1613;
+    --surface: #16211C;
+    --surface-2: #1B2620;
+    --ink: #E7EFE9;
+    --ink-muted: #92A296;
+    --ink-faint: #5E6E64;
+    --line: #2B3830;
+    --accent: #3ED9AC;
+    --accent-ink: #0B1512;
+    --accent-soft: #163229;
+    --danger: #E38068;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--bg); }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(1.75rem, 5vw, 3rem) 1.25rem 4rem;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead { text-align: left; }
+
+  .eyebrow {
+    margin: 0 0 0.35rem;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    margin: 0 0 0.5rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 6vw, 2.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .sub {
+    margin: 0;
+    max-width: 46ch;
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .perforation {
+    margin: 1.75rem 0;
+    border: none;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* ---------- stats ---------- */
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+
+  .stat {
+    background: var(--surface);
+    padding: 0.95rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .stat-accent { background: var(--accent-soft); }
+
+  .stat-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .stat-accent .stat-label { color: var(--accent); }
+
+  .stat-value {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.25rem, 4vw, 1.55rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- form ---------- */
+
+  .entry-form-wrap {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 1.25rem 1.25rem 1.1rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .entry-form {
+    display: grid;
+    grid-template-columns: 122px 1fr 128px 152px auto;
+    gap: 0.9rem 1.1rem;
+    align-items: end;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+
+  .field label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--ink-muted);
+  }
+
+  .field label .opt { font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+  .field input {
+    font: inherit;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    padding: 0.3rem 0.1rem 0.4rem;
+    width: 100%;
+    min-width: 0;
+    transition: border-color 0.15s ease;
+  }
+
+  .field input::placeholder { color: var(--ink-faint); }
+
+  .field input:hover { border-bottom-color: var(--ink-faint); }
+  .field input:focus { border-bottom-color: var(--accent); outline: none; }
+  .field input:focus-visible { outline: none; border-bottom-color: var(--accent); box-shadow: 0 1.5px 0 var(--accent); }
+
+  .field-date input, .field-amount input {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .amount-input {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    border-bottom: 1.5px solid var(--line);
+    transition: border-color 0.15s ease;
+  }
+  .amount-input:hover { border-bottom-color: var(--ink-faint); }
+  .amount-input:focus-within { border-bottom-color: var(--accent); }
+  .amount-input span {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+  .amount-input input {
+    border: none;
+    padding: 0.3rem 0.1rem 0.4rem;
+  }
+  .amount-input input:focus { outline: none; }
+
+  .btn-add {
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: none;
+    border-radius: 7px;
+    padding: 0.62rem 1.15rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter 0.15s ease, transform 0.05s ease;
+  }
+  .btn-add:hover { filter: brightness(1.08); }
+  .btn-add:active { transform: translateY(1px); }
+  .btn-add:disabled { opacity: 0.55; cursor: default; }
+
+  .form-status {
+    margin: 0.6rem 0 0;
+    min-height: 1.1em;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+
+  /* ---------- config warning ---------- */
+
+  .config-warning {
+    display: none;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .config-warning code {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    background: var(--surface);
+    border-radius: 4px;
+    padding: 0.05rem 0.35rem;
+  }
+
+  /* ---------- ledger ---------- */
+
+  .ledger-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .ledger-head h2 {
+    margin: 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+  }
+
+  .day-group + .day-group { margin-top: 1.3rem; }
+
+  .day-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 0.35rem;
+    margin-bottom: 0.15rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .day-subtotal {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .entry-list { list-style: none; margin: 0; padding: 0; }
+
+  .entry {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.42rem 0;
+  }
+
+  .entry-desc {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 62%;
+  }
+
+  .entry-who { color: var(--ink-faint); font-size: 0.88em; }
+
+  .entry-leader {
+    flex: 1 1 auto;
+    min-width: 0.75rem;
+    border-bottom: 1px dotted var(--line);
+    margin-bottom: 0.28em;
+  }
+
+  .entry-value {
+    flex-shrink: 0;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.95rem;
+  }
+
+  .entry-del {
+    flex-shrink: 0;
+    width: 1.4rem;
+    height: 1.4rem;
+    line-height: 1.4rem;
+    text-align: center;
+    padding: 0;
+    border: none;
+    border-radius: 5px;
+    background: none;
+    color: var(--ink-faint);
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease;
+  }
+
+  .entry:hover .entry-del,
+  .entry-del:focus-visible { opacity: 1; }
+
+  @media (hover: none) { .entry-del { opacity: 0.55; } }
+
+  .entry-del:hover { background: var(--accent-soft); color: var(--danger); }
+
+  .entry-del.armed {
+    opacity: 1;
+    color: var(--accent-ink);
+    background: var(--danger);
+  }
+  .entry-del.armed:hover { background: var(--danger); filter: brightness(1.1); }
+  .entry-del:disabled { opacity: 0.4; cursor: default; }
+
+  .empty-state {
+    padding: 1.5rem 0;
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  /* ---------- skeleton ---------- */
+
+  .skeleton { padding: 0.4rem 0; }
+  .skeleton-line {
+    height: 0.95rem;
+    border-radius: 4px;
+    background: var(--surface-2);
+    margin: 0.55rem 0;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  .skeleton-line.short { width: 55%; }
+  @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.9; } }
+
+  /* ---------- footer ---------- */
+
+  .foot {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    flex-shrink: 0;
+  }
+  .foot.is-live .dot { background: var(--accent); animation: blink 2.4s ease-in-out infinite; }
+  .foot.is-error .dot { background: var(--danger); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-line, .foot.is-live .dot { animation: none; }
+  }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 640px) {
+    .entry-form { grid-template-columns: 1fr 1fr; }
+    .field-desc { grid-column: 1 / -1; }
+    .btn-add { grid-column: 1 / -1; }
+    .entry-desc { max-width: 48%; }
+  }
+
+  @media (max-width: 420px) {
+    .stats { grid-template-columns: 1fr; }
+    .entry-form { grid-template-columns: 1fr; }
+    .field-desc { grid-column: auto; }
+    .btn-add { grid-column: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="masthead">
+    <p class="eyebrow">Livro-Caixa</p>
+    <h1>Despesas da operação</h1>
+    <p class="sub">Lance o que sai do caixa. Todo mundo com este link vê e edita os mesmos lançamentos, na hora.</p>
+  </header>
+
+  <hr class="perforation">
+
+  <p class="config-warning" id="config-warning">
+    <strong>Falta configurar.</strong> Abra o arquivo <code>index.html</code>, encontre <code>firebaseConfig</code> perto do fim
+    e cole ali os dados do seu projeto Firebase. Veja o passo a passo que acompanha este arquivo.
+  </p>
+
+  <section class="stats" aria-label="Resumo">
+    <div class="stat">
+      <span class="stat-label">Hoje</span>
+      <span class="stat-value" id="stat-today">R$ 0,00</span>
+    </div>
+    <div class="stat stat-accent">
+      <span class="stat-label" id="stat-month-label">Este mês</span>
+      <span class="stat-value" id="stat-month">R$ 0,00</span>
+    </div>
+  </section>
+
+  <section class="entry-form-wrap" aria-label="Novo lançamento">
+    <form id="entry-form" class="entry-form" autocomplete="off">
+      <div class="field field-date">
+        <label for="f-date">Data</label>
+        <input type="date" id="f-date" name="date" required>
+      </div>
+      <div class="field field-desc">
+        <label for="f-desc">O que é</label>
+        <input type="text" id="f-desc" name="description" placeholder="Frete, anúncios, aluguel…" required maxlength="120">
+      </div>
+      <div class="field field-amount">
+        <label for="f-amount">Valor</label>
+        <div class="amount-input">
+          <span>R$</span>
+          <input type="text" id="f-amount" name="amount" inputmode="decimal" placeholder="0,00" required>
+        </div>
+      </div>
+      <div class="field field-who">
+        <label for="f-who">Quem <span class="opt">(opcional)</span></label>
+        <input type="text" id="f-who" name="who" maxlength="40" placeholder="Seu nome">
+      </div>
+      <button type="submit" id="f-submit" class="btn-add">Lançar</button>
+    </form>
+    <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+  </section>
+
+  <section aria-label="Lançamentos">
+    <div class="ledger-head">
+      <h2>Lançamentos</h2>
+    </div>
+    <div id="ledger-body">
+      <div class="skeleton" aria-hidden="true">
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    </div>
+    <p class="empty-state" id="empty-state" hidden>Nenhuma despesa lançada ainda. Use o formulário acima para começar.</p>
+  </section>
+
+  <footer class="foot" id="foot">
+    <span class="dot" aria-hidden="true"></span>
+    <span id="sync-note">Conectando…</span>
+  </footer>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, deleteDoc, doc,
+    onSnapshot, query, orderBy, limit
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  // ---------------------------------------------------------------
+  // 1) Cole aqui os dados do SEU projeto Firebase (veja o guia que
+  //    acompanha este arquivo). Sem isso a página não sincroniza.
+  // ---------------------------------------------------------------
+  const firebaseConfig = {
+    apiKey: "COLE_SUA_API_KEY_AQUI",
+    authDomain: "SEU-PROJETO.firebaseapp.com",
+    projectId: "SEU-PROJETO",
+    storageBucket: "SEU-PROJETO.appspot.com",
+    messagingSenderId: "COLE_AQUI",
+    appId: "COLE_AQUI"
+  };
+
+  var footEl = document.getElementById('foot');
+  var syncNote = document.getElementById('sync-note');
+  var configWarning = document.getElementById('config-warning');
+  var form = document.getElementById('entry-form');
+  var submitBtn = document.getElementById('f-submit');
+  var formStatus = document.getElementById('form-status');
+  var dateInput = document.getElementById('f-date');
+  var descInput = document.getElementById('f-desc');
+  var amountInput = document.getElementById('f-amount');
+  var whoInput = document.getElementById('f-who');
+  var ledgerBody = document.getElementById('ledger-body');
+  var emptyState = document.getElementById('empty-state');
+  var statToday = document.getElementById('stat-today');
+  var statMonth = document.getElementById('stat-month');
+  var statMonthLabel = document.getElementById('stat-month-label');
+
+  var MONTHS = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+  var WEEKDAYS = ["dom","seg","ter","qua","qui","sex","sáb"];
+  var docs = [];
+
+  function todayISO() {
+    var d = new Date();
+    var tz = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tz).toISOString().slice(0, 10);
+  }
+
+  function brl(n) {
+    return (n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function parseAmount(raw) {
+    var s = (raw || '').trim();
+    if (!s) return NaN;
+    if (s.indexOf(',') !== -1 && s.indexOf('.') !== -1) {
+      s = s.replace(/\./g, '').replace(',', '.');
+    } else if (s.indexOf(',') !== -1) {
+      s = s.replace(',', '.');
+    }
+    return parseFloat(s);
+  }
+
+  function formatDayHeading(iso) {
+    var parts = iso.split('-').map(Number);
+    var date = new Date(parts[0], parts[1] - 1, parts[2]);
+    var isToday = iso === todayISO();
+    var wd = WEEKDAYS[date.getDay()];
+    var label = wd + ', ' + parts[2] + ' de ' + MONTHS[parts[1] - 1];
+    return isToday ? label + ' · hoje' : label;
+  }
+
+  dateInput.value = todayISO();
+  whoInput.value = localStorage.getItem('livrocaixa_who') || '';
+  statMonthLabel.textContent = capitalize(MONTHS[new Date().getMonth()]);
+
+  function render() {
+    var today = todayISO();
+    var ym = today.slice(0, 7);
+    var sumToday = 0, sumMonth = 0;
+    docs.forEach(function (d) {
+      if (typeof d.amount !== 'number') return;
+      if (d.date === today) sumToday += d.amount;
+      if (d.date && d.date.slice(0, 7) === ym) sumMonth += d.amount;
+    });
+    statToday.textContent = brl(sumToday);
+    statMonth.textContent = brl(sumMonth);
+
+    if (!docs.length) {
+      ledgerBody.innerHTML = '';
+      emptyState.hidden = false;
+      return;
+    }
+    emptyState.hidden = true;
+
+    var groups = {};
+    var order = [];
+    docs.forEach(function (d) {
+      if (!groups[d.date]) { groups[d.date] = []; order.push(d.date); }
+      groups[d.date].push(d);
+    });
+    order.sort(function (a, b) { return b.localeCompare(a); });
+
+    ledgerBody.innerHTML = order.map(function (date) {
+      var entries = groups[date].slice().sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+      var subtotal = entries.reduce(function (s, e) { return s + (e.amount || 0); }, 0);
+      var rows = entries.map(function (e) {
+        return '<li class="entry" data-id="' + e.id + '">' +
+          '<span class="entry-desc">' + escapeHtml(e.description || '(sem descrição)') +
+          (e.who ? '<span class="entry-who"> · ' + escapeHtml(e.who) + '</span>' : '') +
+          '</span>' +
+          '<span class="entry-leader" aria-hidden="true"></span>' +
+          '<span class="entry-value">' + brl(e.amount) + '</span>' +
+          '<button type="button" class="entry-del" data-id="' + e.id + '" aria-label="Excluir despesa">×</button>' +
+          '</li>';
+      }).join('');
+      return '<div class="day-group">' +
+        '<div class="day-heading"><span>' + formatDayHeading(date) + '</span><span class="day-subtotal">' + brl(subtotal) + '</span></div>' +
+        '<ul class="entry-list">' + rows + '</ul>' +
+        '</div>';
+    }).join('');
+  }
+
+  ledgerBody.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('.entry-del');
+    if (!btn) return;
+    if (!btn.classList.contains('armed')) {
+      document.querySelectorAll('.entry-del.armed').forEach(function (b) {
+        b.classList.remove('armed');
+        b.textContent = '×';
+      });
+      btn.classList.add('armed');
+      btn.textContent = '✓';
+      setTimeout(function () {
+        if (btn.classList.contains('armed')) { btn.classList.remove('armed'); btn.textContent = '×'; }
+      }, 2500);
+      return;
+    }
+    var id = btn.dataset.id;
+    btn.disabled = true;
+    deleteDoc(doc(db, 'expenses', id)).catch(function () { btn.disabled = false; });
+  });
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var date = dateInput.value || todayISO();
+    var description = descInput.value.trim();
+    var amount = parseAmount(amountInput.value);
+    var who = whoInput.value.trim();
+    if (!description) { formStatus.textContent = 'Descreva a despesa.'; descInput.focus(); return; }
+    if (!isFinite(amount) || amount <= 0) { formStatus.textContent = 'Informe um valor maior que zero.'; amountInput.focus(); return; }
+
+    submitBtn.disabled = true;
+    formStatus.textContent = 'Lançando…';
+    addDoc(collection(db, 'expenses'), {
+      date: date,
+      description: description,
+      amount: amount,
+      who: who || null,
+      ts: Date.now()
+    }).then(function () {
+      if (who) localStorage.setItem('livrocaixa_who', who);
+      descInput.value = '';
+      amountInput.value = '';
+      descInput.focus();
+      formStatus.textContent = 'Lançado.';
+      setTimeout(function () { formStatus.textContent = ''; }, 1800);
+    }).catch(function (err) {
+      formStatus.textContent = 'Não deu para lançar agora (' + (err && err.code ? err.code : 'erro') + ').';
+    }).finally(function () {
+      submitBtn.disabled = false;
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // Conexão com o Firebase
+  // ---------------------------------------------------------------
+  var app, db;
+  var configured = firebaseConfig.apiKey && firebaseConfig.apiKey.indexOf('COLE_') !== 0;
+
+  if (!configured) {
+    configWarning.style.display = 'block';
+    syncNote.textContent = 'Não configurado ainda.';
+    form.querySelectorAll('input, button').forEach(function (el) { el.disabled = true; });
+    ledgerBody.innerHTML = '';
+    emptyState.hidden = false;
+  } else {
+    app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    var q = query(collection(db, 'expenses'), orderBy('ts', 'desc'), limit(500));
+    onSnapshot(q,
+      function (snap) {
+        docs = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+        footEl.classList.remove('is-error');
+        footEl.classList.add('is-live');
+        syncNote.textContent = 'Sincronizado em tempo real.';
+        render();
+      },
+      function (err) {
+        footEl.classList.remove('is-live');
+        footEl.classList.add('is-error');
+        syncNote.textContent = 'Erro de conexão (' + err.code + '). Confira as regras do Firestore.';
+      }
+    );
+  }
+</script>
+</body>
+</html>

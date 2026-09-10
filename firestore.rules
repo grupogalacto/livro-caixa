@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Qualquer pessoa com o link do site pode ler e lançar/apagar
+    // despesas. Não exige login — é o mesmo nível de proteção de um
+    // link de planilha "qualquer um com o link pode editar".
+    match /expenses/{expenseId} {
+      allow read, write: if true;
+    }
+
+    // Tudo que não for a coleção "expenses" continua bloqueado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
