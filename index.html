@@ -323,6 +323,33 @@
     color: var(--ink-muted);
   }
 
+  /* ---------- segmented control (tipo / filtro) ---------- */
+
+  .segmented {
+    display: inline-flex;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    width: fit-content;
+  }
+  .segmented-btn {
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    background: transparent;
+    border: none;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .segmented-btn + .segmented-btn { border-left: 1.5px solid var(--line); }
+  .segmented-btn.is-active { background: var(--accent); color: var(--accent-ink); }
+  .segmented-btn:hover:not(.is-active) { background: var(--surface-2); }
+
+  .ledger-filter { margin-bottom: 0.9rem; }
+
   /* ---------- config warning ---------- */
 
   .config-warning {
@@ -456,6 +483,18 @@
   }
 
   .entry-who { color: var(--ink-faint); font-size: 0.88em; }
+
+  .entry-type-tag {
+    flex-shrink: 0;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+  }
 
   .entry-leader {
     flex: 1 1 auto;
@@ -634,6 +673,13 @@
         <label for="f-desc">O que é</label>
         <input type="text" id="f-desc" name="description" placeholder="Frete Correios, anúncios do Meta, aluguel do galpão…" required maxlength="120">
       </div>
+      <div class="field field-type">
+        <label>Tipo</label>
+        <div class="segmented" id="type-toggle" role="group" aria-label="Tipo de lançamento">
+          <button type="button" class="segmented-btn is-active" data-type="despesa">Despesa</button>
+          <button type="button" class="segmented-btn" data-type="mercadoria">Mercadoria</button>
+        </div>
+      </div>
       <div class="entry-form-row">
         <div class="field field-date">
           <label for="f-date">Data</label>
@@ -666,6 +712,13 @@
         <button type="button" id="export-btn" class="btn-export">Exportar CSV</button>
       </div>
       <p class="export-status" id="export-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="ledger-filter">
+      <div class="segmented" id="type-filter" role="group" aria-label="Filtrar lançamentos">
+        <button type="button" class="segmented-btn is-active" data-filter="all">Tudo</button>
+        <button type="button" class="segmented-btn" data-filter="despesa">Despesas</button>
+        <button type="button" class="segmented-btn" data-filter="mercadoria">Mercadoria</button>
+      </div>
     </div>
     <div id="ledger-body">
       <div class="skeleton" aria-hidden="true">
@@ -723,10 +776,20 @@
   var exportTo = document.getElementById('export-to');
   var exportBtn = document.getElementById('export-btn');
   var exportStatus = document.getElementById('export-status');
+  var typeToggle = document.getElementById('type-toggle');
+  var typeFilter = document.getElementById('type-filter');
 
   var MONTHS = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
   var WEEKDAYS = ["dom","seg","ter","qua","qui","sex","sáb"];
+  var TYPE_LABELS = { despesa: 'Despesa', mercadoria: 'Mercadoria' };
+  var EMPTY_MESSAGES = {
+    all: 'Nenhum lançamento ainda. Use o formulário acima para começar.',
+    despesa: 'Nenhuma despesa lançada nesse filtro.',
+    mercadoria: 'Nenhuma mercadoria lançada nesse filtro.'
+  };
   var docs = [];
+  var selectedType = 'despesa';
+  var currentFilter = 'all';
 
   function todayISO() {
     var d = new Date();
@@ -772,11 +835,30 @@
   exportFrom.value = todayISO().slice(0, 7) + '-01';
   exportTo.value = todayISO();
 
+  typeToggle.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('.segmented-btn');
+    if (!btn) return;
+    selectedType = btn.dataset.type;
+    typeToggle.querySelectorAll('.segmented-btn').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+  });
+
+  typeFilter.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('.segmented-btn');
+    if (!btn) return;
+    currentFilter = btn.dataset.filter;
+    typeFilter.querySelectorAll('.segmented-btn').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+    render();
+  });
+
   function render() {
     var today = todayISO();
     var ym = today.slice(0, 7);
+    var visible = docs.filter(function (d) {
+      return currentFilter === 'all' || (d.type || 'despesa') === currentFilter;
+    });
+
     var sumToday = 0, sumMonth = 0;
-    docs.forEach(function (d) {
+    visible.forEach(function (d) {
       if (typeof d.amount !== 'number') return;
       if (d.date === today) sumToday += d.amount;
       if (d.date && d.date.slice(0, 7) === ym) sumMonth += d.amount;
@@ -784,8 +866,9 @@
     statToday.textContent = brl(sumToday);
     statMonth.textContent = brl(sumMonth);
 
-    if (!docs.length) {
+    if (!visible.length) {
       ledgerBody.innerHTML = '';
+      emptyState.textContent = EMPTY_MESSAGES[currentFilter] || EMPTY_MESSAGES.all;
       emptyState.hidden = false;
       return;
     }
@@ -793,7 +876,7 @@
 
     var groups = {};
     var order = [];
-    docs.forEach(function (d) {
+    visible.forEach(function (d) {
       if (!groups[d.date]) { groups[d.date] = []; order.push(d.date); }
       groups[d.date].push(d);
     });
@@ -803,13 +886,15 @@
       var entries = groups[date].slice().sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
       var subtotal = entries.reduce(function (s, e) { return s + (e.amount || 0); }, 0);
       var rows = entries.map(function (e) {
+        var isMercadoria = (e.type || 'despesa') === 'mercadoria';
         return '<li class="entry" data-id="' + e.id + '">' +
           '<span class="entry-desc">' + escapeHtml(e.description || '(sem descrição)') +
           (e.who ? '<span class="entry-who"> · ' + escapeHtml(e.who) + '</span>' : '') +
           '</span>' +
+          (isMercadoria ? '<span class="entry-type-tag">Mercadoria</span>' : '') +
           '<span class="entry-leader" aria-hidden="true"></span>' +
           '<span class="entry-value">' + brl(e.amount) + '</span>' +
-          '<button type="button" class="entry-del" data-id="' + e.id + '" aria-label="Excluir despesa">×</button>' +
+          '<button type="button" class="entry-del" data-id="' + e.id + '" aria-label="Excluir lançamento">×</button>' +
           '</li>';
       }).join('');
       return '<div class="day-group">' +
@@ -845,7 +930,7 @@
     var description = descInput.value.trim();
     var amount = parseAmount(amountInput.value);
     var who = whoInput.value.trim();
-    if (!description) { formStatus.textContent = 'Descreva a despesa.'; descInput.focus(); return; }
+    if (!description) { formStatus.textContent = 'Descreva o lançamento.'; descInput.focus(); return; }
     if (!isFinite(amount) || amount <= 0) { formStatus.textContent = 'Informe um valor maior que zero.'; amountInput.focus(); return; }
 
     submitBtn.disabled = true;
@@ -854,6 +939,7 @@
       date: date,
       description: description,
       amount: amount,
+      type: selectedType,
       who: who || null,
       ts: Date.now()
     }).then(function () {
@@ -898,36 +984,38 @@
     }
 
     var filtered = docs.filter(function (d) {
-      return d.date && d.date >= from && d.date <= to;
+      if (!d.date || d.date < from || d.date > to) return false;
+      return currentFilter === 'all' || (d.type || 'despesa') === currentFilter;
     }).slice().sort(function (a, b) {
       return a.date === b.date ? (a.ts || 0) - (b.ts || 0) : a.date.localeCompare(b.date);
     });
 
     if (!filtered.length) {
-      exportStatus.textContent = 'Nenhuma despesa lançada nesse período.';
+      exportStatus.textContent = 'Nenhum lançamento encontrado nesse período.';
       return;
     }
 
     var total = 0;
-    var lines = ['Data;O que é;Valor (R$);Quem'];
+    var lines = ['Data;O que é;Tipo;Valor (R$);Quem'];
     filtered.forEach(function (d) {
       total += d.amount || 0;
-      lines.push([dateBR(d.date), csvField(d.description), amountBR(d.amount), csvField(d.who || '')].join(';'));
+      var tipoLabel = TYPE_LABELS[d.type] || TYPE_LABELS.despesa;
+      lines.push([dateBR(d.date), csvField(d.description), tipoLabel, amountBR(d.amount), csvField(d.who || '')].join(';'));
     });
-    lines.push(['', 'Total', amountBR(total), ''].join(';'));
+    lines.push(['', 'Total', '', amountBR(total), ''].join(';'));
 
     var csv = String.fromCharCode(0xFEFF) + lines.join('\r\n');
     var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'despesas_' + from + '_a_' + to + '.csv';
+    a.download = 'lancamentos_' + (currentFilter === 'all' ? '' : currentFilter + '_') + from + '_a_' + to + '.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
 
-    exportStatus.textContent = filtered.length + ' despesa(s) exportada(s).';
+    exportStatus.textContent = filtered.length + ' lançamento(s) exportado(s).';
     setTimeout(function () { exportStatus.textContent = ''; }, 3000);
   });
 
