@@ -194,7 +194,7 @@
     padding: 0.95rem 1.1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.45rem;
   }
 
   .stat-accent { background: var(--accent-soft); }
@@ -209,10 +209,43 @@
 
   .stat-accent .stat-label { color: var(--accent); }
 
+  .stat-breakdown { display: flex; flex-direction: column; gap: 0.2rem; }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+  }
+  .stat-accent .stat-row { color: var(--ink); }
+
+  .stat-row span:last-child {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-row-total {
+    margin-top: 0.15rem;
+    padding-top: 0.4rem;
+    border-top: 1px dashed var(--line);
+  }
+  .stat-accent .stat-row-total { border-top-color: rgba(14, 107, 82, 0.25); }
+
+  .stat-row-total span:first-child {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .stat-accent .stat-row-total span:first-child { color: var(--accent); }
+
   .stat-value {
     font-family: "IBM Plex Mono", ui-monospace, monospace;
     font-variant-numeric: tabular-nums;
-    font-size: clamp(1.25rem, 4vw, 1.55rem);
+    font-size: clamp(1.15rem, 3.6vw, 1.4rem);
     font-weight: 500;
     letter-spacing: -0.01em;
   }
@@ -659,11 +692,19 @@
   <section class="stats" aria-label="Resumo">
     <div class="stat">
       <span class="stat-label">Hoje</span>
-      <span class="stat-value" id="stat-today">R$ 0,00</span>
+      <div class="stat-breakdown">
+        <div class="stat-row"><span>Despesas</span><span id="stat-today-despesa">R$ 0,00</span></div>
+        <div class="stat-row"><span>Mercadoria</span><span id="stat-today-mercadoria">R$ 0,00</span></div>
+      </div>
+      <div class="stat-row stat-row-total"><span>Total</span><span class="stat-value" id="stat-today">R$ 0,00</span></div>
     </div>
     <div class="stat stat-accent">
       <span class="stat-label" id="stat-month-label">Este mês</span>
-      <span class="stat-value" id="stat-month">R$ 0,00</span>
+      <div class="stat-breakdown">
+        <div class="stat-row"><span>Despesas</span><span id="stat-month-despesa">R$ 0,00</span></div>
+        <div class="stat-row"><span>Mercadoria</span><span id="stat-month-mercadoria">R$ 0,00</span></div>
+      </div>
+      <div class="stat-row stat-row-total"><span>Total</span><span class="stat-value" id="stat-month">R$ 0,00</span></div>
     </div>
   </section>
 
@@ -772,6 +813,10 @@
   var statToday = document.getElementById('stat-today');
   var statMonth = document.getElementById('stat-month');
   var statMonthLabel = document.getElementById('stat-month-label');
+  var statTodayDespesa = document.getElementById('stat-today-despesa');
+  var statTodayMercadoria = document.getElementById('stat-today-mercadoria');
+  var statMonthDespesa = document.getElementById('stat-month-despesa');
+  var statMonthMercadoria = document.getElementById('stat-month-mercadoria');
   var exportFrom = document.getElementById('export-from');
   var exportTo = document.getElementById('export-to');
   var exportBtn = document.getElementById('export-btn');
@@ -853,18 +898,28 @@
   function render() {
     var today = todayISO();
     var ym = today.slice(0, 7);
+
+    var sumTodayDespesa = 0, sumTodayMercadoria = 0, sumMonthDespesa = 0, sumMonthMercadoria = 0;
+    docs.forEach(function (d) {
+      if (typeof d.amount !== 'number') return;
+      var isMercadoria = (d.type || 'despesa') === 'mercadoria';
+      if (d.date === today) {
+        if (isMercadoria) sumTodayMercadoria += d.amount; else sumTodayDespesa += d.amount;
+      }
+      if (d.date && d.date.slice(0, 7) === ym) {
+        if (isMercadoria) sumMonthMercadoria += d.amount; else sumMonthDespesa += d.amount;
+      }
+    });
+    statTodayDespesa.textContent = brl(sumTodayDespesa);
+    statTodayMercadoria.textContent = brl(sumTodayMercadoria);
+    statToday.textContent = brl(sumTodayDespesa + sumTodayMercadoria);
+    statMonthDespesa.textContent = brl(sumMonthDespesa);
+    statMonthMercadoria.textContent = brl(sumMonthMercadoria);
+    statMonth.textContent = brl(sumMonthDespesa + sumMonthMercadoria);
+
     var visible = docs.filter(function (d) {
       return currentFilter === 'all' || (d.type || 'despesa') === currentFilter;
     });
-
-    var sumToday = 0, sumMonth = 0;
-    visible.forEach(function (d) {
-      if (typeof d.amount !== 'number') return;
-      if (d.date === today) sumToday += d.amount;
-      if (d.date && d.date.slice(0, 7) === ym) sumMonth += d.amount;
-    });
-    statToday.textContent = brl(sumToday);
-    statMonth.textContent = brl(sumMonth);
 
     if (!visible.length) {
       ledgerBody.innerHTML = '';
