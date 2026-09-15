@@ -156,9 +156,14 @@
     line-height: 1.5;
   }
 
+  .btn-fechamento-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.9rem;
+  }
   .btn-fechamento {
     display: inline-block;
-    margin-top: 0.9rem;
     font-weight: 600;
     font-size: 0.82rem;
     color: var(--accent);
@@ -644,7 +649,10 @@
       <p class="eyebrow">Livro-Caixa</p>
       <h1>Despesas da operação</h1>
       <p class="sub">Lance o que sai do caixa. Todo mundo com este link vê e edita os mesmos lançamentos, na hora.</p>
-      <a class="btn-fechamento" href="fechamento-agosto-2026.html">Fechamento de agosto &rarr;</a>
+      <div class="btn-fechamento-row">
+        <a class="btn-fechamento" href="fechamento-parcial-setembro-2026.html">Fechamento parcial de setembro &rarr;</a>
+        <a class="btn-fechamento" href="fechamento-agosto-2026.html">Fechamento de agosto &rarr;</a>
+      </div>
     </div>
     <div class="masthead-logos" aria-hidden="true">
       <div class="logo-chip">

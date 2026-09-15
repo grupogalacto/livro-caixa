@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fechamento — Setembro 2026 (parcial)</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%92%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #EEF1ED;
+    --surface: #FCFDFB;
+    --surface-2: #F4F6F2;
+    --ink: #16211B;
+    --ink-muted: #5C6B60;
+    --ink-faint: #8C978E;
+    --line: #D8DED6;
+    --accent: #0E6B52;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E4F0EA;
+    --danger: #A6432F;
+    --shadow: 0 1px 2px rgba(22, 33, 27, 0.06), 0 6px 20px rgba(22, 33, 27, 0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1613;
+      --surface: #16211C;
+      --surface-2: #1B2620;
+      --ink: #E7EFE9;
+      --ink-muted: #92A296;
+      --ink-faint: #5E6E64;
+      --line: #2B3830;
+      --accent: #3ED9AC;
+      --accent-ink: #0B1512;
+      --accent-soft: #163229;
+      --danger: #E38068;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0F1613;
+    --surface: #16211C;
+    --surface-2: #1B2620;
+    --ink: #E7EFE9;
+    --ink-muted: #92A296;
+    --ink-faint: #5E6E64;
+    --line: #2B3830;
+    --accent: #3ED9AC;
+    --accent-ink: #0B1512;
+    --accent-soft: #163229;
+    --danger: #E38068;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+  .page { max-width: 720px; margin: 0 auto; padding: clamp(1.75rem, 5vw, 3rem) 1.25rem 4rem; }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 0.6rem;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .eyebrow {
+    margin: 0 0 0.35rem;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    margin: 0 0 0.5rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.7rem, 5.5vw, 2.3rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .sub { margin: 0; max-width: 50ch; color: var(--ink-muted); font-size: 0.95rem; line-height: 1.5; }
+
+  .perforation { margin: 1.75rem 0; border: none; border-top: 1px dashed var(--line); }
+
+  /* ---------- password gate ---------- */
+
+  .gate-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 1.75rem 1.5rem;
+    max-width: 380px;
+    margin: 2rem auto;
+    text-align: center;
+  }
+  .gate-lock { font-size: 1.6rem; margin-bottom: 0.4rem; }
+  .gate-label { margin: 0 0 1.1rem; color: var(--ink-muted); font-size: 0.9rem; }
+  #gate-form { display: flex; flex-direction: column; gap: 0.9rem; }
+  #gate-password {
+    font: inherit;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    text-align: center;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+  }
+  #gate-password:focus { border-color: var(--accent); outline: none; }
+  .btn-add {
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: none;
+    border-radius: 7px;
+    padding: 0.62rem 1.15rem;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.05s ease;
+  }
+  .btn-add:hover { filter: brightness(1.08); }
+  .btn-add:active { transform: translateY(1px); }
+  .btn-add:disabled { opacity: 0.55; cursor: default; }
+  .gate-status { min-height: 1.2em; margin: 0.8rem 0 0; font-size: 0.82rem; color: var(--danger); }
+
+  /* ---------- hero summary ---------- */
+
+  .hero-summary { margin-bottom: 2.25rem; }
+  .hero-summary h2 {
+    margin: 0 0 1rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+  .hero-card { background: var(--surface); padding: 1.1rem 1rem; display: flex; flex-direction: column; gap: 0.3rem; }
+  .hero-card.hero-total { background: var(--accent-soft); }
+  .hero-name { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-muted); }
+  .hero-card.hero-total .hero-name { color: var(--accent); }
+  .hero-value {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.05rem, 4vw, 1.35rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .hero-share { font-size: 0.78rem; color: var(--ink-faint); }
+
+  @media (max-width: 480px) {
+    .hero-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- report sections ---------- */
+
+  .report-section { margin-bottom: 2.25rem; }
+  .report-section h2 {
+    margin: 0 0 0.85rem;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .report-note { margin: 0.6rem 0 0; font-size: 0.82rem; color: var(--ink-muted); line-height: 1.5; }
+
+  .table-wrap {
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+  }
+  table { border-collapse: collapse; width: 100%; min-width: 480px; }
+  th, td {
+    padding: 0.55rem 0.8rem;
+    text-align: right;
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; white-space: normal; }
+  thead th {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--line);
+  }
+  tbody td { border-bottom: 1px solid var(--line); font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  tbody td:first-child { font-family: "IBM Plex Sans", sans-serif; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.neg, td.pct-neg { color: var(--danger); }
+  tr.emphasis td { font-weight: 600; background: var(--surface-2); }
+
+  .kv-table {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 0.3rem 1.1rem;
+  }
+  .kv-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px dotted var(--line);
+    font-size: 0.9rem;
+  }
+  .kv-row:last-child { border-bottom: none; }
+  .kv-row .kv-label { color: var(--ink-muted); }
+  .kv-row.emphasis .kv-label { color: var(--ink); font-weight: 600; }
+  .kv-row .kv-value {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+  .kv-row.emphasis .kv-value { font-weight: 600; }
+  .kv-row .kv-value.neg { color: var(--danger); }
+  .kv-row.spacer { border-bottom: none; height: 0.4rem; padding: 0; }
+
+  .foot {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header>
+    <a class="back-link" href="index.html">&larr; Livro-Caixa</a>
+    <p class="eyebrow">Fechamento parcial</p>
+    <h1>Setembro de 2026 <span style="opacity:.55">— 01 a 14</span></h1>
+    <p class="sub">Resumo consolidado de todas as plataformas — canais, custos, impostos e divisão do lucro entre os sócios. Fechamento PARCIAL: cobre só os primeiros 14 dias do mês.</p>
+  </header>
+
+  <hr class="perforation">
+
+  <section id="gate">
+    <div class="gate-card">
+      <div class="gate-lock" aria-hidden="true">&#128274;</div>
+      <p class="gate-label">Este fechamento é protegido por senha.</p>
+      <form id="gate-form" autocomplete="off">
+        <input type="password" id="gate-password" placeholder="Senha" autofocus required>
+        <button type="submit" class="btn-add" id="gate-submit">Abrir fechamento</button>
+      </form>
+      <p class="gate-status" id="gate-status" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section id="report" hidden></section>
+
+</div>
+
+<script>
+(function () {
+  var ENC = {
+    salt: "HeJ3hBKs0vRs5Ye5fCYARQ==",
+    iv: "jJSi6eMp3M8tDhYY",
+    ciphertext: "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",
+    iterations: 250000
+  };
+
+  var gate = document.getElementById('gate');
+  var report = document.getElementById('report');
+  var form = document.getElementById('gate-form');
+  var passwordInput = document.getElementById('gate-password');
+  var submitBtn = document.getElementById('gate-submit');
+  var status = document.getElementById('gate-status');
+
+  function b64ToBytes(b64) {
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
+  function brl(n) {
+    return (n == null ? 0 : n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+  function pct(n) {
+    if (n == null) return '—';
+    return (n * 100).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
+  }
+  function int(n) {
+    if (n == null) return '—';
+    return n.toLocaleString('pt-BR');
+  }
+
+  function moneyCell(n) {
+    var td = document.createElement('td');
+    td.textContent = brl(n);
+    if (n < 0) td.className = 'neg';
+    return td;
+  }
+
+  function buildDataTable(data) {
+    var table = document.createElement('table');
+    var thead = document.createElement('thead');
+    var htr = document.createElement('tr');
+    htr.appendChild(document.createElement('th'));
+    data.cols.forEach(function (c) {
+      var th = document.createElement('th');
+      th.textContent = c;
+      htr.appendChild(th);
+    });
+    thead.appendChild(htr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    data.rows.forEach(function (row) {
+      var tr = document.createElement('tr');
+      var labelTd = document.createElement('td');
+      labelTd.textContent = row.label;
+      tr.appendChild(labelTd);
+      row.values.forEach(function (v) {
+        var td;
+        if (v == null) { td = document.createElement('td'); td.textContent = '—'; }
+        else if (row.kind === 'money') td = moneyCell(v);
+        else if (row.kind === 'percent') { td = document.createElement('td'); td.textContent = pct(v); if (v < 0) td.className = 'pct-neg'; }
+        else { td = document.createElement('td'); td.textContent = int(v); }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function kvRow(label, value, opts) {
+    opts = opts || {};
+    var row = document.createElement('div');
+    row.className = 'kv-row' + (opts.emphasis ? ' emphasis' : '');
+    var l = document.createElement('span');
+    l.className = 'kv-label';
+    l.textContent = label;
+    var v = document.createElement('span');
+    v.className = 'kv-value' + (opts.neg ? ' neg' : '');
+    v.textContent = value;
+    row.appendChild(l);
+    row.appendChild(v);
+    return row;
+  }
+
+  function spacer() {
+    var row = document.createElement('div');
+    row.className = 'kv-row spacer';
+    return row;
+  }
+
+  function buildKvTable(rows) {
+    var wrap = document.createElement('div');
+    wrap.className = 'kv-table';
+    rows.forEach(function (r) { wrap.appendChild(r); });
+    return wrap;
+  }
+
+  function buildFixedCostsTable(fixedCosts) {
+    var table = document.createElement('table');
+    var thead = document.createElement('thead');
+    var htr = document.createElement('tr');
+    ['', 'Pago por', 'Quem absorve', 'Valor (R$)'].forEach(function (h) {
+      var th = document.createElement('th'); th.textContent = h; htr.appendChild(th);
+    });
+    thead.appendChild(htr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    fixedCosts.items.forEach(function (it) {
+      var tr = document.createElement('tr');
+      var label = document.createElement('td'); label.textContent = it.label; tr.appendChild(label);
+      var paidBy = document.createElement('td'); paidBy.textContent = it.paidBy; tr.appendChild(paidBy);
+      var absorber = document.createElement('td'); absorber.textContent = it.absorber; tr.appendChild(absorber);
+      tr.appendChild(moneyCell(it.value));
+      tbody.appendChild(tr);
+    });
+
+    var totalRow = document.createElement('tr');
+    totalRow.className = 'emphasis';
+    var totalLabel = document.createElement('td'); totalLabel.textContent = '(=) Total de custos fixos e impostos';
+    totalRow.appendChild(totalLabel);
+    totalRow.appendChild(document.createElement('td'));
+    totalRow.appendChild(document.createElement('td'));
+    totalRow.appendChild(moneyCell(fixedCosts.total));
+    tbody.appendChild(totalRow);
+    table.appendChild(tbody);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function section(title) {
+    var sec = document.createElement('section');
+    sec.className = 'report-section';
+    var h2 = document.createElement('h2');
+    h2.textContent = title;
+    sec.appendChild(h2);
+    return sec;
+  }
+
+  function renderReport(data) {
+    report.innerHTML = '';
+
+    // ---- hero: resumo final ----
+    var hero = document.createElement('section');
+    hero.className = 'hero-summary';
+    var heroH2 = document.createElement('h2');
+    heroH2.textContent = 'Quanto cada um tem a receber';
+    hero.appendChild(heroH2);
+
+    var grid = document.createElement('div');
+    grid.className = 'hero-grid';
+    var fs = data.finalSummary;
+    [
+      { name: 'João Felipe', value: fs.totalToReceive.joao, share: pct(fs.share.joao) + ' do total' },
+      { name: 'Douglas', value: fs.totalToReceive.douglas, share: pct(fs.share.douglas) + ' do total' },
+      { name: 'Total', value: fs.totalToReceive.total, share: null, total: true }
+    ].forEach(function (c) {
+      var card = document.createElement('div');
+      card.className = 'hero-card' + (c.total ? ' hero-total' : '');
+      var name = document.createElement('span'); name.className = 'hero-name'; name.textContent = c.name;
+      var val = document.createElement('span'); val.className = 'hero-value'; val.textContent = brl(c.value);
+      card.appendChild(name); card.appendChild(val);
+      if (c.share) { var sh = document.createElement('span'); sh.className = 'hero-share'; sh.textContent = c.share; card.appendChild(sh); }
+      grid.appendChild(card);
+    });
+    hero.appendChild(grid);
+
+    hero.appendChild(buildDataTable({
+      cols: ['João Felipe', 'Douglas', 'Total'],
+      rows: [
+        { label: fs.panelas.label, kind: 'money', values: [fs.panelas.joao, fs.panelas.douglas, fs.panelas.total] },
+        { label: fs.medservice.label, kind: 'money', values: [fs.medservice.joao, fs.medservice.douglas, fs.medservice.total] },
+        { label: '(=) Total a receber', kind: 'money', values: [fs.totalToReceive.joao, fs.totalToReceive.douglas, fs.totalToReceive.total] }
+      ]
+    }));
+    report.appendChild(hero);
+
+    // ---- consolidado por canal ----
+    var secChannels = section('Consolidado por canal');
+    secChannels.appendChild(buildDataTable(data.channels));
+    report.appendChild(secChannels);
+
+    // ---- base fiscal ----
+    var secFiscal = section('Base fiscal');
+    secFiscal.appendChild(buildKvTable([
+      kvRow('Faturamento fiscal do mês', brl(data.fiscal.faturamentoFiscal)),
+      kvRow('Alíquota de imposto', pct(data.fiscal.aliquota)),
+      kvRow('(=) Imposto sobre faturamento', brl(data.fiscal.impostoSobreFaturamento), { emphasis: true }),
+      kvRow('Faturamento fiscal como % da receita bruta', pct(data.fiscal.faturamentoFiscalPctReceitaBruta))
+    ]));
+    report.appendChild(secFiscal);
+
+    // ---- custos fixos ----
+    var secCosts = section('Custos fixos e impostos da operação');
+    secCosts.appendChild(buildFixedCostsTable(data.fixedCosts));
+    report.appendChild(secCosts);
+
+    // ---- resultado consolidado ----
+    var secResult = section('Resultado consolidado');
+    secResult.appendChild(buildKvTable([
+      kvRow('Lucro operacional dos canais', brl(data.result.operationalProfit)),
+      kvRow('(−) Custos fixos e impostos da operação', brl(data.result.fixedCostsAndTaxes), { neg: true }),
+      kvRow('(=) LUCRO LÍQUIDO A DISTRIBUIR', brl(data.result.netProfitToDistribute), { emphasis: true })
+    ]));
+    report.appendChild(secResult);
+
+    // ---- divisão do lucro (panelas) ----
+    var ps = data.profitSplit;
+    var secSplit = section('Divisão do lucro — Panelas');
+    secSplit.appendChild(buildKvTable([
+      kvRow('Lucro operacional dos canais', brl(ps.operationalProfit)),
+      kvRow('(−) Custos fixos de "Ambos"', brl(ps.bothCosts), { neg: true }),
+      kvRow('(=) Base de rateio', brl(ps.base), { emphasis: true }),
+      spacer(),
+      kvRow('João Felipe — % da base de rateio', pct(ps.joao.pct)),
+      kvRow('João Felipe — base', brl(ps.joao.base)),
+      kvRow('João Felipe — (−) custos "Só João"', brl(ps.joao.onlyCosts), { neg: ps.joao.onlyCosts < 0 }),
+      kvRow('João Felipe — (+) custos do próprio bolso', brl(ps.joao.reimbursed)),
+      kvRow('(=) JOÃO FELIPE — A RECEBER', brl(ps.joao.toReceive), { emphasis: true }),
+      spacer(),
+      kvRow('Douglas — % da base de rateio', pct(ps.douglas.pct)),
+      kvRow('Douglas — base', brl(ps.douglas.base)),
+      kvRow('Douglas — (−) custos "Só Douglas"', brl(ps.douglas.onlyCosts), { neg: ps.douglas.onlyCosts < 0 }),
+      kvRow('Douglas — (+) custos do próprio bolso', brl(ps.douglas.reimbursed)),
+      kvRow('(=) DOUGLAS — A RECEBER', brl(ps.douglas.toReceive), { emphasis: true }),
+      spacer(),
+      kvRow('(=) TOTAL A REPASSAR', brl(ps.totalToPass), { emphasis: true }),
+      kvRow('Caixa disponível', brl(ps.cashAvailable)),
+      kvRow('Conferência (deve ser zero)', brl(ps.check))
+    ]));
+    report.appendChild(secSplit);
+
+    // ---- medservice ----
+    var ms = data.medservice;
+    var secMed = section('MedService — demais itens (exceto panelas)');
+    var note = document.createElement('p'); note.className = 'report-note'; note.textContent = ms.note;
+    secMed.appendChild(note);
+    secMed.appendChild(buildDataTable(ms.channels));
+
+    var msSplitWrap = document.createElement('div');
+    msSplitWrap.style.marginTop = '1rem';
+    msSplitWrap.appendChild(buildKvTable([
+      kvRow('João Felipe — %', pct(ms.split.joaoPct)),
+      kvRow('João Felipe — valor', brl(ms.split.joaoValue), { emphasis: true }),
+      spacer(),
+      kvRow('Douglas — %', pct(ms.split.douglasPct)),
+      kvRow('Douglas — valor', brl(ms.split.douglasValue), { emphasis: true }),
+      spacer(),
+      kvRow('(=) Total distribuído — %', pct(ms.split.totalPct)),
+      kvRow('(=) Total distribuído — valor', brl(ms.split.totalValue), { emphasis: true }),
+      kvRow('Conferência: total distribuído − lucro operacional (deve ser zero)', brl(ms.split.check))
+    ]));
+    secMed.appendChild(msSplitWrap);
+
+    var footnote = document.createElement('p'); footnote.className = 'report-note'; footnote.textContent = ms.footnote;
+    secMed.appendChild(footnote);
+    report.appendChild(secMed);
+
+    // ---- footer ----
+    var foot = document.createElement('div');
+    foot.className = 'foot';
+    var dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = 'var(--accent)';
+    var label = document.createElement('span'); label.textContent = 'Dados de ' + data.period.toLowerCase() + ' — extraídos da planilha de fechamento.';
+    foot.appendChild(dot); foot.appendChild(label);
+    report.appendChild(foot);
+
+    report.hidden = false;
+    gate.hidden = true;
+  }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var pw = passwordInput.value;
+    if (!pw) return;
+    submitBtn.disabled = true;
+    status.textContent = 'Abrindo…';
+
+    var salt = b64ToBytes(ENC.salt);
+    var iv = b64ToBytes(ENC.iv);
+    var ciphertext = b64ToBytes(ENC.ciphertext);
+    var enc = new TextEncoder();
+
+    crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey'])
+      .then(function (keyMaterial) {
+        return crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: salt, iterations: ENC.iterations, hash: 'SHA-256' },
+          keyMaterial,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['decrypt']
+        );
+      })
+      .then(function (key) {
+        return crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ciphertext);
+      })
+      .then(function (plainBuf) {
+        var json = new TextDecoder().decode(plainBuf);
+        var data = JSON.parse(json);
+        status.textContent = '';
+        renderReport(data);
+      })
+      .catch(function () {
+        status.textContent = 'Senha incorreta.';
+        submitBtn.disabled = false;
+        passwordInput.select();
+      });
+  });
+})();
+</script>
+</body>
+</html>
