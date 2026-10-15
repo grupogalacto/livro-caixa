@@ -1,6 +1,6 @@
 # Livro-Caixa — publicar no GitHub com sincronização em tempo real
 
-> **Atualização (13/10/2026):** o site agora tem endereço próprio, `https://www.painelorbita.com.br/`, e a página inicial (`index.html`) é o **painel de gestão** (dashboard protegido por senha). O Livro-Caixa descrito neste guia foi movido para `livro-caixa.html` e não tem mais link no site. Nos passos abaixo, onde diz `index.html`, leia `livro-caixa.html`.
+> **Atualização (15/10/2026):** o site tem endereço próprio, `http://painelorbita.com.br/` (o certificado HTTPS ainda está pendente no GitHub), e a página inicial (`index.html`) é o **painel de gestão**, agora **aberto, sem senha**: os dados ficam em texto na própria página (decisão do dono em 15/10/2026, ciente de que o repositório é público). O Livro-Caixa descrito neste guia foi movido para `livro-caixa.html` e não tem mais link no site. Nos passos abaixo, onde diz `index.html`, leia `livro-caixa.html`.
 
 Este pacote tem 2 arquivos:
 
