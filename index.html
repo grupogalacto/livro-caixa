@@ -18,7 +18,7 @@
   --good-wash: rgba(12,163,12,.10); --warn-wash: rgba(250,178,25,.18); --crit-wash: rgba(208,59,59,.10); --info-wash: rgba(24,53,179,.08);
   --seq-0: #eef1ff; --seq-1: #d5ddff; --seq-2: #b5c3fb; --seq-3: #94a8f4; --seq-4: #7088ea; --seq-5: #4d68dc; --seq-6: #2f4ccb; --seq-7: #1a34a8;
   --hex-bg: linear-gradient(135deg, rgba(134,199,237,.50), rgba(160,102,204,.30));
-  --lg-azul: #1835b3; --lg-roxo: #a066cc; --lg-ceu: #86c7ed; --lg-txt: #050816;
+  --lg-azul: #1835b3; --lg-roxo: #a066cc; --lg-ceu: #86c7ed; --lg-txt: #050816; --rosa: #d63f84; --rosa-2: #f5a3c7;
   --shadow: 0 1px 2px rgba(20,32,100,.05), 0 10px 28px rgba(20,32,100,.06);
   --radius: 18px;
 }
@@ -34,7 +34,7 @@
     --good-wash: rgba(12,163,12,.16); --warn-wash: rgba(250,178,25,.16); --crit-wash: rgba(224,82,79,.16); --info-wash: rgba(127,152,255,.16);
     --seq-0: #151d58; --seq-1: #1b2a7c; --seq-2: #23399f; --seq-3: #3351c4; --seq-4: #4c6ae0; --seq-5: #6f88f0; --seq-6: #98abf8; --seq-7: #c4d0ff;
     --hex-bg: linear-gradient(135deg, rgba(134,199,237,.28), rgba(160,102,204,.34));
-    --lg-azul: #6f8dff; --lg-roxo: #b585e0; --lg-ceu: #86c7ed; --lg-txt: #f3f5ff;
+    --lg-azul: #6f8dff; --lg-roxo: #b585e0; --lg-ceu: #86c7ed; --lg-txt: #f3f5ff; --rosa: #f472b6; --rosa-2: #fbb6ce;
     --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.30);
     color-scheme: dark;
   }
@@ -50,7 +50,7 @@
   --good-wash: rgba(12,163,12,.16); --warn-wash: rgba(250,178,25,.16); --crit-wash: rgba(224,82,79,.16); --info-wash: rgba(127,152,255,.16);
   --seq-0: #151d58; --seq-1: #1b2a7c; --seq-2: #23399f; --seq-3: #3351c4; --seq-4: #4c6ae0; --seq-5: #6f88f0; --seq-6: #98abf8; --seq-7: #c4d0ff;
   --hex-bg: linear-gradient(135deg, rgba(134,199,237,.28), rgba(160,102,204,.34));
-  --lg-azul: #6f8dff; --lg-roxo: #b585e0; --lg-ceu: #86c7ed; --lg-txt: #f3f5ff;
+  --lg-azul: #6f8dff; --lg-roxo: #b585e0; --lg-ceu: #86c7ed; --lg-txt: #f3f5ff; --rosa: #f472b6; --rosa-2: #fbb6ce;
   --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.30);
   color-scheme: dark;
 }
@@ -389,26 +389,55 @@ table.t tr.dest td:first-child { box-shadow: inset 4px 0 0 var(--accent); }
 @keyframes brilha { 0% { opacity: 0; transform: scale(0) rotate(0deg); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } 100% { opacity: 0; transform: scale(.4) rotate(90deg); } }
 @keyframes introSai { to { opacity: 0; visibility: hidden; } }
 @keyframes introPula { to { opacity: 0; visibility: hidden; } }
+/* ------------------------------------------------------------------ Outubro Rosa: liga sozinho em outubro (classe no <html>, posta pelo script do tema) */
+.laco { display: block; width: 100%; height: 100%; overflow: visible; }
+.laco path { fill: none; stroke: var(--rosa); stroke-width: 5.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; filter: drop-shadow(0 0 4px rgba(244,114,182,.45)); }
+.rosa-laco, .rosa-cap, .intro-laco, .intro-rosa { display: none; }
+html.outubro-rosa:root { --lg-ceu: var(--rosa-2); }               /* o hexágono da logo fica rosa no mês */
+.outubro-rosa .brand { position: relative; }
+.outubro-rosa .rosa-laco { display: block; position: absolute; top: 0; left: calc(50% + 47px); width: 21px; height: 28px; }
+.outubro-rosa .rosa-laco path { animation: lacoDesenha 1.1s ease 3.6s both; }   /* desenha logo depois da abertura sair */
+.outubro-rosa .rosa-cap { display: block; margin-top: -4px; font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--rosa); text-align: center; }
+.outubro-rosa .brand-cap::before, .outubro-rosa .brand-cap::after { background: linear-gradient(90deg, var(--rosa), var(--rosa-2)); }
+.ig1 { stop-color: #86c7ed; } .ig2 { stop-color: #a066cc; } .ig3 { stop-color: #3a5bff; }
+.outubro-rosa .ig1 { stop-color: #ffc1dc; } .outubro-rosa .ig2 { stop-color: #f472b6; } .outubro-rosa .ig3 { stop-color: #b585e0; }
+.outubro-rosa .intro { background: radial-gradient(60% 55% at 50% 45%, rgba(244,114,182,.22), transparent 70%), radial-gradient(40% 40% at 50% 58%, rgba(160,102,204,.16), transparent 70%), var(--bg); }
+.outubro-rosa .intro:not(.sai) { animation-delay: 3.25s; }       /* um pouco mais longa no mês, para dar tempo de ler a homenagem */
+.outubro-rosa .intro-ecg path { filter: drop-shadow(0 0 6px rgba(244,114,182,.7)); }
+.outubro-rosa .intro-onda { border-color: var(--rosa); }
+.outubro-rosa .intro-onda.o2 { border-color: var(--rosa-2); }
+.outubro-rosa .intro-brilho svg { filter: drop-shadow(0 0 6px rgba(244,114,182,.95)); }
+.outubro-rosa .intro-laco { display: block; position: absolute; z-index: 2; left: calc(50% + 78px); top: 8px; width: 30px; height: 40px; opacity: 0; animation: palavra .3s ease 1.45s forwards; }
+.outubro-rosa .intro-laco path { animation: lacoDesenha .8s ease 1.45s both; }
+.outubro-rosa .intro-rosa { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; font-weight: 700; letter-spacing: .02em; color: var(--rosa); opacity: 0; animation: palavra .6s ease 1.95s forwards; }
+.outubro-rosa .intro-rosa .laco { width: 14px; height: 19px; }
+@keyframes lacoDesenha { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@media (max-width: 960px) {
+  .outubro-rosa .rosa-laco { position: static; width: 15px; height: 20px; margin-left: 2px; }
+  .outubro-rosa .rosa-cap { display: none; }
+}
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } .intro { display: none !important; } }
 .chip-btn { cursor: pointer; } .chip-btn:hover { background: var(--hover); } .chip-btn .ico { width: 15px; height: 15px; }
 </style>
 <script>/* Tema escuro como padrão (pedido do usuário); a escolha feita no botão do topo fica guardada neste navegador. */
-(function () { var t = 'dark'; try { if (localStorage.getItem('med.tema') === 'claro') t = 'light'; } catch (e) { /* sem armazenamento: escuro */ } document.documentElement.setAttribute('data-theme', t); })();
+(function () { var t = 'dark'; try { if (localStorage.getItem('med.tema') === 'claro') t = 'light'; } catch (e) { /* sem armazenamento: escuro */ } document.documentElement.setAttribute('data-theme', t); if (new Date().getMonth() === 9) document.documentElement.classList.add('outubro-rosa'); })();
 </script>
 </head><body><svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><g id="lg-g-mark"><path class="lg-ceu" d="M67.85 93.38L84.90 64.32L119.10 64.32L136.15 93.38L119.10 122.44L84.90 122.44Z"/><path class="lg-roxo" d="M118.10 6.36L153.50 6.36L203.90 93.71L187.30 122.46L151.90 122.46L101.50 35.11Z"/><path class="lg-azul" d="M186.30 6.36L221.70 6.36L272.10 93.71L255.50 122.46L220.10 122.46L169.70 35.11Z"/></g><path id="lg-g-word" class="lg-txt" fill-rule="evenodd" d="M310.6 151.0L310.6 190.9L335.8 190.9L335.8 183.4L321.1 183.3L321.2 174.3L333.1 174.3L333.1 167.1L321.1 167.0L321.1 158.6L334.9 158.5L335.9 151.0ZM260.7 151.0L260.7 190.9L271.3 190.9L271.3 151.0ZM223.6 151.0L234.7 190.9L248.2 190.9L258.9 151.0L248.1 151.0L241.8 182.7L241.6 183.1L240.9 180.2L234.8 151.1ZM192.8 151.0L192.7 190.9L203.3 190.9L203.4 176.2L206.4 176.2L214.2 190.9L226.0 190.9L216.1 174.4L216.2 174.1L217.6 173.4L219.4 172.1L220.9 170.8L222.1 169.1L223.0 166.9L223.4 165.0L223.5 163.5L223.3 160.9L222.7 158.5L222.0 157.1L221.1 155.8L219.7 154.4L217.9 153.2L214.9 152.0L212.6 151.5L208.0 151.0ZM203.4 158.4L207.8 158.4L209.9 158.9L210.7 159.4L211.8 160.5L212.4 161.7L212.6 162.7L212.5 164.9L211.8 166.7L211.4 167.4L210.5 168.2L209.8 168.5L208.2 169.0L203.3 168.9ZM162.8 151.0L162.8 190.9L188.0 190.9L188.0 183.4L173.3 183.3L173.4 174.3L185.4 174.3L185.4 167.1L173.3 167.0L173.3 158.6L187.1 158.5L188.1 151.0ZM79.1 151.0L79.1 190.9L93.7 190.9L96.5 190.6L99.0 190.2L101.6 189.4L103.6 188.5L105.2 187.5L106.7 186.3L108.1 184.8L110.0 181.8L111.1 179.0L112.0 174.5L112.2 170.6L112.1 168.2L111.7 165.1L110.6 161.1L109.6 158.8L108.8 157.8L107.2 156.0L104.4 154.0L101.4 152.6L98.3 151.8L95.7 151.3L91.8 151.0ZM89.8 158.6L94.6 158.7L95.7 158.9L97.3 159.6L98.9 161.0L99.6 162.1L100.2 163.2L100.8 165.5L101.2 168.4L101.2 173.1L100.7 176.7L100.1 178.9L99.0 180.7L98.0 181.7L96.4 182.7L94.6 183.2L89.7 183.2ZM49.1 151.0L49.1 190.9L74.4 190.9L74.3 183.4L59.8 183.3L59.9 174.3L71.7 174.3L71.7 167.1L59.8 167.0L59.8 158.6L73.4 158.5L74.5 151.0ZM5.0 151.0L2.0 190.9L12.5 190.9L13.1 173.4L13.0 166.9L12.5 160.5L12.6 160.0L18.4 186.8L28.5 186.8L33.9 160.0L34.0 160.8L33.8 164.0L33.7 169.2L34.4 190.9L44.9 190.9L41.8 151.0L28.5 151.1L24.3 174.6L23.6 177.4L18.2 151.0ZM292.9 150.0L290.1 150.4L286.3 151.7L284.6 152.6L282.7 153.8L280.3 156.2L278.4 159.1L277.2 161.7L276.7 163.4L276.2 165.4L275.9 168.0L275.8 172.5L276.3 177.1L277.4 180.8L278.9 183.8L280.3 185.9L281.8 187.4L284.6 189.4L287.7 190.9L289.6 191.4L291.7 191.8L295.5 192.0L298.6 191.5L301.4 190.6L304.8 188.8L306.9 187.2L307.4 186.6L302.8 180.7L300.5 182.3L298.7 183.2L297.1 183.8L296.0 184.0L293.7 183.9L292.1 183.4L290.9 182.7L289.5 181.5L288.5 180.0L288.0 178.9L287.4 176.8L286.9 173.9L286.9 167.8L287.6 163.9L288.1 162.6L289.2 160.6L290.7 159.0L292.1 158.2L294.2 157.7L295.8 157.7L296.9 157.9L299.3 158.7L302.0 160.4L306.9 154.5L305.4 153.3L304.0 152.4L302.4 151.6L300.2 150.8L298.3 150.3L296.2 150.0ZM145.2 150.0L141.6 150.0L139.0 150.4L136.5 151.1L133.9 152.3L132.1 153.6L130.3 155.5L129.1 157.8L128.4 160.2L128.3 162.7L128.5 164.2L129.0 165.9L129.8 167.6L130.5 168.7L131.6 169.9L134.0 171.7L136.3 172.8L138.7 173.8L143.2 175.3L145.2 176.1L146.8 177.2L147.5 178.5L147.7 180.5L147.2 181.9L146.2 183.1L144.6 184.0L142.6 184.3L141.2 184.3L138.4 183.9L136.3 183.2L134.8 182.4L131.9 180.5L126.7 186.1L128.3 187.6L130.7 189.2L134.1 190.7L137.7 191.6L141.2 192.0L145.3 191.8L148.4 191.2L151.8 190.0L154.3 188.5L156.3 186.5L157.6 184.3L158.4 181.9L158.7 179.8L158.7 178.5L158.3 175.6L157.7 173.7L157.0 172.4L156.2 171.3L154.3 169.6L152.5 168.4L149.2 166.9L142.4 164.6L140.6 163.6L139.6 162.4L139.3 161.6L139.3 160.4L139.5 159.7L140.4 158.6L141.4 157.9L143.0 157.6L145.3 157.6L147.7 158.0L150.3 159.1L152.9 160.8L157.6 155.2L156.1 153.9L154.4 152.7L151.8 151.5L148.6 150.5Z"/><symbol id="lg-mark" viewBox="66.5 5 207 119"><use href="#lg-g-mark"/></symbol><symbol id="lg-word" viewBox="1 149 336 44"><use href="#lg-g-word"/></symbol><symbol id="lg-full" viewBox="0 0 339 196"><use href="#lg-g-mark"/><use href="#lg-g-word"/></symbol></defs></svg>
 <div class="intro" id="intro" aria-hidden="true" title="Clique para pular">
   <div class="intro-c">
     <div class="intro-palco">
       <svg class="intro-ecg" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true">
-        <defs><linearGradient id="intro-gr" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#86c7ed"/><stop offset=".55" stop-color="#a066cc"/><stop offset="1" stop-color="#3a5bff"/></linearGradient></defs>
+        <defs><linearGradient id="intro-gr" x1="0" x2="1" y1="0" y2="0"><stop class="ig1" offset="0"/><stop class="ig2" offset=".55"/><stop class="ig3" offset="1"/></linearGradient></defs>
         <path pathLength="1" d="M0 70 H210 l10 -9 l10 9 H280 l7 9 l13 -64 l14 82 l8 -27 H360 l13 -13 l17 13 H600"/>
       </svg>
       <span class="intro-onda"></span><span class="intro-onda o2"></span>
+      <span class="intro-laco"><svg class="laco" viewBox="0 0 32 42" aria-hidden="true"><path pathLength="1" d="M8 38 L20 18 C24 12 23 5 16 5 C9 5 8 12 12 18 L24 38"/></svg></span>
       <svg class="intro-mark" viewBox="66.5 5 207 119" aria-hidden="true"><g class="intro-batida"><path class="im-ceu" d="M67.85 93.38L84.90 64.32L119.10 64.32L136.15 93.38L119.10 122.44L84.90 122.44Z"/><path class="im-roxo" d="M118.10 6.36L153.50 6.36L203.90 93.71L187.30 122.46L151.90 122.46L101.50 35.11Z"/><path class="im-azul" d="M186.30 6.36L221.70 6.36L272.10 93.71L255.50 122.46L220.10 122.46L169.70 35.11Z"/></g></svg>
       <span class="intro-brilho b1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 5.6 6.4 11.4 12 12-5.6.6-11.4 6.4-12 12-.6-5.6-6.4-11.4-12-12 5.6-.6 11.4-6.4 12-12Z"/></svg></span><span class="intro-brilho b2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 5.6 6.4 11.4 12 12-5.6.6-11.4 6.4-12 12-.6-5.6-6.4-11.4-12-12 5.6-.6 11.4-6.4 12-12Z"/></svg></span><span class="intro-brilho b3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 5.6 6.4 11.4 12 12-5.6.6-11.4 6.4-12 12-.6-5.6-6.4-11.4-12-12 5.6-.6 11.4-6.4 12-12Z"/></svg></span>
     </div>
     <svg class="lg intro-word" role="img" aria-label="MedService"><use href="#lg-word" width="100%" height="100%"/></svg>
     <span class="intro-cap">Painel de gestão</span>
+    <span class="intro-rosa"><svg class="laco" viewBox="0 0 32 42" aria-hidden="true"><path pathLength="1" d="M8 38 L20 18 C24 12 23 5 16 5 C9 5 8 12 12 18 L24 38"/></svg>Outubro Rosa · o diagnóstico precoce salva vidas</span>
   </div>
 </div>
 <div class="app" id="app">
@@ -418,6 +447,8 @@ table.t tr.dest td:first-child { box-shadow: inset 4px 0 0 var(--accent); }
       <svg class="lg lg-hm" aria-hidden="true"><use href="#lg-mark" width="100%" height="100%"/></svg>
       <svg class="lg lg-hw" role="img" aria-label="MedService"><use href="#lg-word" width="100%" height="100%"/></svg>
       <span class="brand-cap">Painel de gestão</span>
+      <span class="rosa-laco" title="Outubro Rosa: mês de conscientização sobre o câncer de mama"><svg class="laco" viewBox="0 0 32 42" aria-hidden="true"><path pathLength="1" d="M8 38 L20 18 C24 12 23 5 16 5 C9 5 8 12 12 18 L24 38"/></svg></span>
+      <span class="rosa-cap">Outubro Rosa · previna-se</span>
     </div>
     <button type="button" class="meta-mes" id="meta-mes" hidden></button>
     <nav class="nav" id="nav" aria-label="Páginas do painel"></nav>
@@ -981,7 +1012,7 @@ function animaNumeros(raiz) {
    Quem pede "reduzir movimento" no sistema não vê a abertura (o CSS esconde e aqui ela já começa encerrada). */
 const INTRO = (function () {
   const el = document.getElementById('intro');
-  const DUR = 2950;                                         // a saída do CSS começa em 2,45 s e termina em 2,9 s
+  const DUR = document.documentElement.classList.contains('outubro-rosa') ? 3750 : 2950;   // a saída do CSS começa em 2,45 s (3,25 s em outubro) e dura 0,45 s
   let solto = false, feito = false, avisa;
   const fim = new Promise(r => { avisa = r; });
   function solta() { if (solto) return; solto = true; window.__esperaIntro = false; avisa(); }          // o painel pode desenhar
@@ -1005,7 +1036,9 @@ const INTRO = (function () {
   try { saida = (el.getAnimations ? el.getAnimations() : []).find(a => a.animationName === 'introSai') || null; } catch (e) { saida = null; }
   if (saida && saida.finished) {
     saida.finished.then(acaba, () => { /* cancelada ao pular: o pula() encerra */ });
-    if (saida.currentTime != null && saida.currentTime >= 2450) solta();                // o script chegou depois de a saída começar
+    let atraso = 2450;
+    try { atraso = saida.effect.getTiming().delay; } catch (e) { /* mantém 2,45 s */ }
+    if (saida.currentTime != null && saida.currentTime >= atraso) solta();              // o script chegou depois de a saída começar
   } else setTimeout(acaba, Math.max(0, DUR - performance.now()) + 250);              // navegador sem Web Animations: estimativa pelo relógio
   setTimeout(acaba, 9000);                                                             // reserva final: nunca prende o painel
   return { fim };
