@@ -1400,6 +1400,7 @@ const ESC = { sel: 'ads', raf: 0 };
 const curtoAd = (n, k) => { const s = String(n || '').replace(/\s*\[\d+\]$/, ''); return s.length > k ? s.slice(0, k - 1) + '…' : s; };
 
 /* ------------------------------------------------------------------ agente de Ads: o que a mesa e a ficha mostram */
+const mudouTxt = t => { const m = String(t || '').match(/^(\S+) \((\d+) → (\d+)\)/); return m ? `de ${m[2]} para ${m[3]} em ${m[1]}` : `(${esc(t)})`; };
 function adsResumo() {
   const L = DB.plano || {}, ks = Object.keys(L).sort(), P = ks.length ? L[ks[ks.length - 1]] : null;
   const A = P && P.ads ? P.ads : null, conta = DB.anuncios && DB.anuncios.conta ? DB.anuncios.conta : null;
@@ -1411,8 +1412,9 @@ function adsResumo() {
   const g5 = media(ult, 'gasto'), r5 = ult.length ? sum(ult, x => (x.rec || 0) + (x.cred || 0)) / ult.length : null, g7 = media(antes, 'gasto');
   // saldo limitando: nos últimos dias o gasto ficou do tamanho da recarga e bem abaixo da semana anterior
   const limitado = !!(g5 && r5 && g7 && Math.abs(r5 - g5) <= 0.2 * g5 && g5 < 0.75 * g7);
-  const cred7 = sum(ex.slice(-7), x => x.cred || 0);
-  return { P, A, conta, acoes, ex, g5, r5, g7, limitado, cred7, tab: A ? (A.tabela || []).filter(t => t.st === 'Em Andamento' && (t.gasto_dia || 0) >= 1) : [] };
+  const cred7 = conta && ok(conta.protecao_7d) ? conta.protecao_7d + sum(ex.slice(-7), x => x.cred || 0) : sum(ex.slice(-7), x => x.cred || 0);   // Proteção ROAS lida na conta + créditos grátis do extrato
+  const subiu = conta && conta.metas ? Object.values(conta.metas).filter(m => m.mudou) : [];
+  return { P, A, conta, acoes, ex, g5, r5, g7, limitado, cred7, subiu, tab: A ? (A.tabela || []).filter(t => t.st === 'Em Andamento' && (t.gasto_dia || 0) >= 1) : [] };
 }
 function balaoAds(a) {                        // as falas do agente de Ads no balão, uma por vez
   if (!a || !a.A) return ['Sem relatório de Ads'];
@@ -1428,14 +1430,15 @@ function fichaAds(a) {
   if (!a || !a.A) return vazioHtml('Sem relatório de Ads', 'Mande o "Dados Gerais de Anúncios" e o extrato do Ads da Shopee.');
   const { A, conta: c } = a;
   const frase = `<div class="frase">Nos últimos ${A.dias_rec || 7} dias até ${dd(A.relatorio)}, o Ads gastou <b>${brl(A.gasto_dia)} por dia</b> e deixou uns <b>${brl(A.lucro_dia)} por dia</b> de lucro ` +
-    `na margem dos produtos (já com a seringa de 0,5 ml a R$ 1,10)${a.cred7 > 0 ? `, mais <b>${brl(a.cred7)}</b> de créditos da Shopee nos últimos 7 dias` : ''}.` +
-    (a.limitado ? ` <b>O saldo está segurando as vendas:</b> de ${dd(a.ult5de())} a ${dd(M.ultCompleto)} o gasto (${brl(a.g5)} por dia) ficou do tamanho da recarga, contra ${brl(a.g7)} por dia na semana anterior.` : '') +
+    `na margem dos produtos (já com a seringa de 0,5 ml a R$ 1,10)${a.cred7 > 0 ? `, mais <b>${brl(a.cred7)}</b> que a Shopee devolveu em créditos nos últimos 7 dias${a.conta && ok(a.conta.protecao_7d) ? ' (Proteção ROAS e crédito grátis das recargas)' : ''}` : ''}.` +
+    (a.limitado ? ` <b>O gasto caiu à metade:</b> de ${dd(a.ult5de())} a ${dd(M.ultCompleto)} foi de ${brl(a.g5)} por dia, contra ${brl(a.g7)} na semana anterior` +
+      (a.subiu.length ? `, depois que a meta de ROAS de ${a.subiu.map(m => esc(m.nome)).join(' e ')} subiu ${mudouTxt(a.subiu[0].mudou)}, e com a recarga do tamanho do gasto.` : ', com a recarga do tamanho do gasto.') : '') +
     (c ? ` Conta lida em ${dd(c.lido_em.slice(0, 10))} às ${c.lido_em.slice(11, 16)}${ok(c.saldo) ? `: saldo de ${brl(c.saldo, 2)}` : ''}${c.parado ? ', <b>anúncios parados</b>' : ''}.` : '') + '</div>';
   const hoje = [];
   if (c && c.parado) hoje.push('<li><b>Recarregar o Ads agora:</b> o saldo zerou e todos os anúncios pararam.</li>');
   else if (a.limitado) {
     const ganho = sum(a.tab.filter(t => t.lucro_r != null), t => t.gasto_dia * t.lucro_r) / Math.max(1, sum(a.tab, t => t.gasto_dia));
-    hoje.push(`<li><b>Voltar a recarregar uns ${brl(Math.round(a.g7 / 100) * 100)} por dia</b> (a semana antes de cair). Com o retorno de hoje, cada R$ 1 de Ads deixa uns ${brl(ganho, 2)} de lucro; o real a mais rende menos, mas ainda paga: o corte da recarga derrubou as vendas junto.</li>`);
+    hoje.push(`<li><b>Não deixar o saldo acabar:</b> recarregar uns ${brl(Math.round(a.g7 / 100) * 100)} por dia (a semana antes de cair). Com o retorno de hoje, cada R$ 1 de Ads deixa uns ${brl(ganho, 2)} de lucro; o real a mais rende menos, mas ainda paga.</li>`);
   }
   if (c && c.recompensa && c.recompensa.texto) hoje.push(`<li><b>Recompensa da Shopee:</b> ${esc(c.recompensa.texto)}. Faço a conta antes de você se inscrever.</li>`);
   for (const x of a.acoes.slice(0, 5)) hoje.push(`<li><b>${esc(curtoAd(x.alvo, 56))}:</b> ${esc(x.acao)}${ok(x.impacto) ? ` <span class="meta">(${x.impacto_tipo === 'deixa de perder' ? 'deixa de perder' : '+'}${brl(x.impacto)} por mês)</span>` : ''}</li>`);
